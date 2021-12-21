@@ -15,7 +15,7 @@
                         ["vcs" "tag" "v" "--no-sign"]
                         ["deploy" "clojars"]
                         ["change" "version" "leiningen.release/bump-version"]
-                        ["vcs" "commit"]
+                        ["vcs" "commit" "bump to next snapshot version for future development"]
                         ["vcs" "push"]]
 
   )
