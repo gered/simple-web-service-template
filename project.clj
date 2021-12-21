@@ -1,4 +1,4 @@
-(defproject net.gered/lein-template.simple-web-service "0.1.0-SNAPSHOT"
+(defproject net.gered/lein-template.simple-web-service "0.1.0"
   :description         "Simple Clojure web service project template."
   :url                 "https://github.com/gered/simple-web-service-template"
   :license             {:name "MIT License"
