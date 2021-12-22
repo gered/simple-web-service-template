@@ -21,16 +21,20 @@
   :main         {{root-ns}}.core
 
   :repl-options {:init-ns {{root-ns}}.core}
+  :target-path  "target/%s/"
 
-  :profiles     {:dev     {:source-paths   ["env/dev/src"]
-                           :resource-paths ["env/dev/resources"]
-                           :dependencies   [[pjstadig/humane-test-output "0.11.0"]]
-                           :injections     [(require 'pjstadig.humane-test-output)
-                                            (pjstadig.humane-test-output/activate!)]}
+  :profiles     {:dev             {:source-paths   ["env/dev/src"]
+                                   :resource-paths ["env/dev/resources"]
+                                   :dependencies   [[pjstadig/humane-test-output "0.11.0"]]
+                                   :injections     [(require 'pjstadig.humane-test-output)
+                                                    (pjstadig.humane-test-output/activate!)]}
 
-                 :uberjar {:source-paths   ["env/prod/src"]
-                           :resource-paths ["env/prod/resources"]
-                           :omit-source    true
-                           :aot            :all}}
+                 :release         {:source-paths   ["env/release/src"]
+                                   :resource-paths ["env/release/resources"]}
 
-  :aliases      {"uberjar" ["do" ["clean"] ["uberjar"]]})
+                 :release/uberjar {:omit-source    true
+                                   :aot            :all}
+
+                 :uberjar         [:release :release/uberjar]}
+
+  )

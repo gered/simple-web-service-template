@@ -16,8 +16,8 @@
       data
       "env/dev/resources"
       "env/dev/src"
-      "env/prod/resources"
-      "env/prod/src"
+      "env/release/resources"
+      "env/release/src"
       ["resources/logback.xml"               (render "resources/logback.xml" data)]
       ["src/{{root-ns-path}}/core.clj"       (render "src/root_ns/core.clj" data)]
       ["test/{{root-ns-path}}/core_test.clj" (render "test/root_ns/core_test.clj" data)]
