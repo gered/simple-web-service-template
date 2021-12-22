@@ -13,7 +13,7 @@
                         ["change" "version" "leiningen.release/bump-version" "release"]
                         ["vcs" "commit"]
                         ["vcs" "tag" "v" "--no-sign"]
-                        ["deploy" "clojars"]
+                        ["deploy"]
                         ["change" "version" "leiningen.release/bump-version"]
                         ["vcs" "commit" "bump to next snapshot version for future development"]
                         ["vcs" "push"]]
