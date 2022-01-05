@@ -175,9 +175,9 @@
     (log/info (format "Started HTTP server listening on %s:%d" bind port))
     server)
   :stop
-  (when @http-server
+  (when http-server
     (log/info "Stopping HTTP server")
-    (http-kit/server-stop! @http-server)
+    (http-kit/server-stop! http-server)
     nil))
 
 ;;
