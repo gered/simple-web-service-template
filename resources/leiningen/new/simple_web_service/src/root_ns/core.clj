@@ -131,15 +131,15 @@
                            coercion/coerce-request-middleware ; coercing request parameters
                            multipart/multipart-middleware   ; multipart
                            ]}})
-    (ring/routes
-      (ring/create-default-handler))))
 
-(defn wrap-base
-  [handler]
-  (as-> handler h
-        (if (:dev? config) (wrap-reload h) h)
-        ; TODO: other base middleware here
-        ))
+    (ring/routes
+      (ring/create-default-handler))
+
+    ; add any top-level middleware here that will be applied to the *entire* handler,
+    ; regardless of the route matched, if any. (most of the time you'd want to use
+    ; the :middleware list found above though...)
+    {:middleware []}))
+
 
 ;;
 
@@ -168,7 +168,8 @@
          :or   {port 8080
                 bind "0.0.0.0"}} (:http-server config)
         server (http-kit/run-server
-                 (wrap-base #'handler)
+                 (as-> #'handler h
+                       (if (:dev? config) (wrap-reload h) h))
                  {:port                 port
                   :ip                   bind
                   :server-header        nil
