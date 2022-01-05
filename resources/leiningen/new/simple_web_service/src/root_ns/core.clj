@@ -169,9 +169,10 @@
                 bind "0.0.0.0"}} (:http-server config)
         server (http-kit/run-server
                  (wrap-base #'handler)
-                 {:port          port
-                  :ip            bind
-                  :server-header nil})]
+                 {:port                 port
+                  :ip                   bind
+                  :server-header        nil
+                  :legacy-return-value? false})]
     (log/info (format "Started HTTP server listening on %s:%d" bind port))
     server)
   :stop
