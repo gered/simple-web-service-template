@@ -25,6 +25,14 @@ A nREPL server will be started which can be connected to on port 7000 (configure
 The web service's endpoints will be accessible over port 8080 (again, configured via the aforementioned `config.edn`).
 The Swagger UI page will be available at `/api-docs/` e.g. http://localhost:8080/api-docs/
 
+## Other Templates!
+
+I have a few other "simple" Leiningen project templates that are along the same vein as this one:
+
+* [Simple Clojure App](https://github.com/gered/simple-app-template) - Very simple starter base for non-web projects.
+* [Simple Clojure Web Site](https://github.com/gered/simple-web-site-template) - For web sites using only server-side rendered HTML (**no** ClojureScript!).
+* [Simple Clojure / ClojureScript Web App](https://github.com/gered/simple-web-app-template) - For web apps using Clojure and ClojureScript.
+
 ## License
 
 Copyright © 2021 Gered King
