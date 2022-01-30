@@ -3,7 +3,7 @@
   (:gen-class)
   (:require
     [clojure.tools.logging :as log]
-    [cprop.core :refer [load-config]]
+    [aero.core :refer [read-config]]
     [hiccup.page :refer [html5]]
     [org.httpkit.server :as http-kit]
     [mount.core :as mount :refer [defstate]]
@@ -33,7 +33,7 @@
   :start
   (do
     (log/info "Loading config.edn")
-    (load-config :file "config.edn")))
+    (read-config "config.edn")))
 
 (defstate ^{:on-reload :noop} repl-server
   :start
