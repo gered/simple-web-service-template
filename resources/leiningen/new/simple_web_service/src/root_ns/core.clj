@@ -22,10 +22,55 @@
     [ring.util.http-response :refer :all]
     [schema.core :as s]))
 
-(declare config)
+(declare handler)
+
 
 ;;
-;; TODO: other app stuff goes here ...
+;; infrastructure components
+;;
+
+(defstate ^{:on-reload :noop} config
+  :start
+  (do
+    (log/info "Loading config.edn")
+    (load-config :file "config.edn")))
+
+(defstate ^{:on-reload :noop} repl-server
+  :start
+  (let [{:keys [port bind]
+         :or   {port 7000
+                bind "127.0.0.1"}} (:nrepl config)
+        server (nrepl/start-server :port port :bind bind)]
+    (log/info (format "Starting nREPL server listening on %s:%d" bind port))
+    server)
+  :stop
+  (when repl-server
+    (log/info "Stopping nREPL server")
+    (nrepl/stop-server repl-server)))
+
+(defstate ^{:on-reload :noop} http-server
+  :start
+  (let [{:keys [port bind]
+         :or   {port 8080
+                bind "0.0.0.0"}} (:http config)
+        server (http-kit/run-server
+                 (as-> #'handler h
+                       (if (:dev? config) (wrap-reload h) h))
+                 {:port                 port
+                  :ip                   bind
+                  :server-header        nil
+                  :legacy-return-value? false})]
+    (log/info (format "Started HTTP server listening on %s:%d" bind port))
+    server)
+  :stop
+  (when http-server
+    (log/info "Stopping HTTP server")
+    (http-kit/server-stop! http-server)
+    nil))
+
+
+;;
+;; web middleware
 ;;
 
 ; example exception handler that logs all unhandled exceptions thrown by your routes
@@ -47,6 +92,11 @@
       (if (= "secret" api-key)
         (handler request)
         (unauthorized "unauthorized!")))))
+
+
+;;
+;; main web handler
+;;
 
 (defstate handler
   :start
@@ -140,47 +190,6 @@
     ; the :middleware list found above though...)
     {:middleware []}))
 
-
-;;
-
-(defstate ^{:on-reload :noop} config
-  :start
-  (do
-    (log/info "Loading config.edn")
-    (load-config :file "config.edn")))
-
-(defstate ^{:on-reload :noop} repl-server
-  :start
-  (let [{:keys [port bind]
-         :or   {port 7000
-                bind "127.0.0.1"}} (:nrepl config)
-        server (nrepl/start-server :port port :bind bind)]
-    (log/info (format "Starting nREPL server listening on %s:%d" bind port))
-    server)
-  :stop
-  (when repl-server
-    (log/info "Stopping nREPL server")
-    (nrepl/stop-server repl-server)))
-
-(defstate ^{:on-reload :noop} http-server
-  :start
-  (let [{:keys [port bind]
-         :or   {port 8080
-                bind "0.0.0.0"}} (:http config)
-        server (http-kit/run-server
-                 (as-> #'handler h
-                       (if (:dev? config) (wrap-reload h) h))
-                 {:port                 port
-                  :ip                   bind
-                  :server-header        nil
-                  :legacy-return-value? false})]
-    (log/info (format "Started HTTP server listening on %s:%d" bind port))
-    server)
-  :stop
-  (when http-server
-    (log/info "Stopping HTTP server")
-    (http-kit/server-stop! http-server)
-    nil))
 
 ;;
 
